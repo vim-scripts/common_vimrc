@@ -49,7 +49,12 @@ endif
 "Vim 选项 fileencoding（Vim 当前编辑的文件在存储时的编码）
 "Vim 选项 fileencodings（Vim 打开文件时的尝试使用的编码）
 "Vim 选项 ambiwidth（对“不明宽度”字符的处理方式；Vim 6.1.455 后引入）
+
+"语法高亮 
 syntax on
+"根据文件类型高亮
+filetype plugin on
+source $VIMRUNTIME/menu.vim
 
 set fileencodings=ucs-bom,utf-8,gbk,big5,latin1
 set encoding=utf-8
@@ -60,14 +65,13 @@ set fileencoding=utf-8
 set backspace=2
 set autoindent
 "set expandtab
-"set cindent shiftwidth=2
-"set autoindent shiftwidth=2
 
 "空格代替tab
-set shiftwidth=4
+"set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 set cindent shiftwidth=4
+"set autoindent shiftwidth=2
 
 "行号
 set number
@@ -78,15 +82,16 @@ set ruler
 set incsearch
 set showmode
 "打开文件时自动回到上次编辑位置
-if has("autocmd")
-autocmd BufRead *.txt set tw=78
-autocmd BufReadPost *
-\ if line("'\"") > 0 && line ("'\"") <= line("$") |
-\   exe "normal g'\"" |
-\ endif
-endif
+"if has("autocmd")
+"	autocmd BufRead *.txt set tw=78
+"	autocmd BufReadPost *
+"		\ if line("'\"") > 0 && line ("'\"") <= line("$") |
+"		\ exe "normal g'\"" |
+"		\ endif
+"endif
 
 set showcmd
+
 "置粘贴模式，这样粘贴过来的程序代码就不会错位了。
 "set paste
 
@@ -106,7 +111,9 @@ set hls
 "但现在要区分
 "set noic
 
-"设置不备份
+"设置备份
+set backup
+set backupext=.bak
 "set nobackup
 "set nowritebackup
 
@@ -117,31 +124,38 @@ set hls
 "source $VIMRUNTIME/colors/slate.vim
 "colorscheme nightflight
 "colorscheme desert
-highlight Comment ctermfg=Lightred
+"highlight Comment ctermfg=Lightred
 "hi Normal ctermfg=252 ctermbg=237 term=standout
 "colorscheme greens " http://elephant.linux.net.cn/files/greens.vim
+highlight Comment ctermfg=Lightred
 
-"默认是插入模式
+"默认是插入模式，退出插入模式 Ctrl+o
 "set insertmode
 
+"设置vim控制鼠标滚动
+"set mouse=a
+
+"设置 Ctrl+x + Ctrl+f 选择路径时，去除不是文件名的特殊字符
 set isf=@,48-57,/,.,-,_,+,#,$,%,~
+
 "设置Crontab为可用状态 
 set backupcopy=yes
 
 "设置使用screen vim时，因为错误的按键使屏幕不再闪烁
 set vb t_vb=
-
+    
 "设置折叠模式
-set foldcolumn=4
+"set foldcolumn=4
 "光标遇到折叠，折叠就打开
-set foldopen=all
+"set foldopen=all
 "移开折叠时自动关闭折叠
-set foldclose=all
+"set foldclose=all
 "zf zo zc zd zr zm zR zM zn zi zN 
 "依缩进折叠
 "set foldmethod=indent
 "依标记折叠
 "set foldmethod=marker
+
 
 "菜单
 set wildmenu
@@ -149,22 +163,20 @@ set wildcharm=<C-Z>
 
 "set whichwrap=b,s,h,l,<,>,[,]
 "autocmd BufReadPost ~/MLPlatform/* set tags+=~/.vim/tags.MLPlatform
+set tag+=~/.vim/tags.gcc
 
 "if has("gui")
-"	if has("win32")
-"		set guifont=新宋体:h12
-"	else
-"		set guifont=新宋体\ 10
-"	endif 
-"	set columns=128 lines=36
+"   if has("win32")
+"       set guifont=新宋体:h12
+"   else
+"       set guifont=新宋体\ 10
+"   endif 
+"   set columns=128 lines=36
 "endif 
 
-source $VIMRUNTIME/menu.vim
-
-"map <F5> :w<CR>:!php -q %<CR>
-"map <F6> a<C-R>=strftime("%Y/%m/%d %T")<CR><Esc>
 map <F6> a<C-R>=strftime("%c")<CR><Esc>
 map <F7> :w<CR>:!/bin/sh -x %<CR>
 map <F8> :w<CR>:!perl -c %<CR>
 map <F9> :w<CR>:!perl %<CR>
 map <F4> :emenu <C-Z>
+map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
