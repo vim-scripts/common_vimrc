@@ -1,3 +1,5 @@
+" $Id: .vimrc,v 1.1.0 2008/09/18 16:47:59 Cnangel Exp $
+"
 " Multi-encoding setting, MUST BE IN THE BEGINNING OF .vimrc!
 "
 if has("multi_byte")
@@ -56,10 +58,16 @@ syntax on
 filetype plugin on
 source $VIMRUNTIME/menu.vim
 
+"set fenc enc fencs
 set fileencodings=ucs-bom,utf-8,gbk,big5,latin1
 set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
+
+"指定菜单语言
+" set langmenu=zh_CN.UTF-8
+" source $VIMRUNTIME/delmenu.vim
+" source $VIMRUNTIME/menu.vim
 
 "缩进
 set backspace=2
@@ -99,8 +107,17 @@ set showcmd
 set helplang=cn
 
 "界面字体
-set gfn=Courier_New:h10:cANSI
-"set guifont=SimSun 12
+"set gfn=Courier\ New:h10:cANSI
+"set guifont=Courier\ New
+"set guifont=simsun\ 13
+"if has("gui")
+"   if has("win32")
+"       set guifont=新宋体:h12
+"   else
+"       set guifont=新宋体\ 10
+"   endif 
+"   set columns=128 lines=36
+"endif 
 
 "搜索关键字高亮
 set hls
@@ -156,7 +173,6 @@ set vb t_vb=
 "依标记折叠
 "set foldmethod=marker
 
-
 "菜单
 set wildmenu
 set wildcharm=<C-Z>
@@ -165,18 +181,23 @@ set wildcharm=<C-Z>
 "autocmd BufReadPost ~/MLPlatform/* set tags+=~/.vim/tags.MLPlatform
 set tag+=~/.vim/tags.gcc
 
-"if has("gui")
-"   if has("win32")
-"       set guifont=新宋体:h12
-"   else
-"       set guifont=新宋体\ 10
-"   endif 
-"   set columns=128 lines=36
-"endif 
+"设定文件浏览器目录为当前目录
+"set bsdir=buffer
+"set autochdir
 
-map <F6> a<C-R>=strftime("%c")<CR><Esc>
+" C/C++注释
+"set comments=://
+" 修正自动C式样注释功能
+"set comments=s1:/*,mb:*,ex0:/
+
+" 命令行高度
+"set cmdheight=1
+
+map <F6> a<C-R>=strftime("%Y/%m/%d %H:%M:%S")<CR><ESC>
 map <F7> :w<CR>:!/bin/sh -x %<CR>
 map <F8> :w<CR>:!perl -c %<CR>
 map <F9> :w<CR>:!perl %<CR>
 map <F4> :emenu <C-Z>
 map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+map ,1 a# $Id: <C-R>=expand("%:t")<CR>,v 1.0.0 <C-R>=strftime("%Y/%m/%d %H:%M:%S")<CR> Cnangel Exp $<CR><ESC>
+map ,2 a/**<ESC>o * <ESC>o* <ESC>o*/<ESC>2ka
