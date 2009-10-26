@@ -1,4 +1,4 @@
-" $Id: .vimrc,v 1.1.0 2008/09/18 16:47:59 Cnangel Exp $
+" $Id: .vimrc,v 1.1.0 2009/10/26 18:01:32 Cnangel Exp $
 "
 " Multi-encoding setting, MUST BE IN THE BEGINNING OF .vimrc!
 "
@@ -73,6 +73,7 @@ set fileencoding=utf-8
 set backspace=2
 set autoindent
 "set expandtab
+set smartindent
 
 "空格代替tab
 "set shiftwidth=4
@@ -87,8 +88,12 @@ set number
 "标尺
 set ruler
 
-set incsearch
+set nrformats=hex
+
 set showmode
+set showmatch
+set hidden
+
 "打开文件时自动回到上次编辑位置
 "if has("autocmd")
 "	autocmd BufRead *.txt set tw=78
@@ -97,6 +102,13 @@ set showmode
 "		\ exe "normal g'\"" |
 "		\ endif
 "endif
+
+if has("win32")
+	set path=.,C:\Program\\\ Files\Microsoft\\\ Visual\\\ Studio\\\ .NET\\\ 2003\Vc7\include,,
+else
+	set path=.,/usr/include,/usr/lib/gcc/i586-redhat-linux/4.4.0/include,/usr/lib/gcc/i586-redhat-linux/3.4.6/include,,
+endif
+
 
 set showcmd
 
@@ -121,6 +133,8 @@ set helplang=cn
 
 "搜索关键字高亮
 set hls
+"set hlsearch
+set incsearch
 
 "搜索是对不全区分大小写
 "set ic
@@ -136,6 +150,7 @@ set backupext=.bak
 
 "默认备份文件目录
 "set backupdir=/usr/local/backup
+"set directory=~/tmp
 
 "设置配色方案，colorscheme可以设置，但我总提示找不到
 "source $VIMRUNTIME/colors/slate.vim
@@ -145,6 +160,12 @@ set backupext=.bak
 "hi Normal ctermfg=252 ctermbg=237 term=standout
 "colorscheme greens " http://elephant.linux.net.cn/files/greens.vim
 highlight Comment ctermfg=Lightred
+"colorscheme evening 
+"hi Normal ctermfg=grey ctermbg=black
+"hi Visual ctermfg=green ctermbg=black
+"hi Search term=reverse cterm=standout ctermfg=green  ctermbg=yellow
+"hi IncSearch term=reverse cterm=standout ctermfg=green ctermbg=yellow
+
 
 "默认是插入模式，退出插入模式 Ctrl+o
 "set insertmode
@@ -177,9 +198,12 @@ set vb t_vb=
 set wildmenu
 set wildcharm=<C-Z>
 
-"set whichwrap=b,s,h,l,<,>,[,]
+set whichwrap=b,s,h,l,<,>,[,]
+"set wildmenu
+"set wildcharm=<C-Z>
+"set wrap
 "autocmd BufReadPost ~/MLPlatform/* set tags+=~/.vim/tags.MLPlatform
-set tag+=~/.vim/tags.gcc
+set tag+=~/.vim/tags.include,~/.vim/tags.gcc,~/.vim/tags.local,~/.vim/tags.kernel,~/.vim/moretags.gcc
 
 "设定文件浏览器目录为当前目录
 "set bsdir=buffer
@@ -193,11 +217,85 @@ set tag+=~/.vim/tags.gcc
 " 命令行高度
 "set cmdheight=1
 
+" 最近文件储存的地点
+"set MRU_File=~/.vim/.vim_mru_files
+
+"set nocompatible
+"set backspace=indent,eol,start
+
 map <F6> a<C-R>=strftime("%Y/%m/%d %H:%M:%S")<CR><ESC>
 map <F7> :w<CR>:!/bin/sh -x %<CR>
 map <F8> :w<CR>:!perl -c %<CR>
-map <F9> :w<CR>:!perl %<CR>
+map <C-F8> :w<CR>:!perl %<CR>
 map <F4> :emenu <C-Z>
 map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-map ,1 a# $Id: <C-R>=expand("%:t")<CR>,v 1.0.0 <C-R>=strftime("%Y/%m/%d %H:%M:%S")<CR> Cnangel Exp $<CR><ESC>
-map ,2 a/**<ESC>o * <ESC>o* <ESC>o*/<ESC>2ka
+map ,1 a# $Id: <C-R>=expand("%:t")<CR>,v 1.0.0-0 <C-R>=strftime("%Y/%m/%d %H:%M:%S")<CR> Cnangel Exp $<CR><ESC>
+map ,2 gg\|i<CR><ESC>ka/**<CR><ESC>\|Di * Copyright(c) <C-R>=strftime("%Y")<CR> Alibaba Company, All Rights Reserved.<CR><ESC>\|Di * <CR><ESC>\|Di * @Filename: <C-R>=expand("%:t")<CR><CR><ESC>\|Di * @Description:<CR><ESC>\|Di * @Author: cnangel<CR><ESC>\|Di * @Version: 1.0.0<CR><ESC>\|Di * @Time: <C-R>=strftime("%Y/%m/%d %H:%M:%S")<CR><CR><ESC>\|Di */<CR><ESC>\|D:w<CR>5k$a
+map ,3 a/**<CR><ESC>\|Di * @param <ESC>yyppppo<ESC>\|Di */<ESC>5k$a
+map ,4 o<ESC>\|Da* <ESC>:language time C<CR>a<C-R>=strftime("%a %b %d %Y")<CR> Cnangel <junliang.li@alibaba-inc.com> 1.0.0-1<ESC>o<ESC>\|Da- 
+map ,5 gg\|i<CR><ESC>ka/**<CR><ESC>\|Di * Copyright(c) <C-R>=strftime("%Y")<CR> Alibaba Company, All Rights Reserved.<CR><ESC>\|Di * <CR><ESC>\|Di * @file <C-R>=expand("%:t")<CR><CR><ESC>\|Di * @details <CR><ESC>\|Di * @author cnangel<CR><ESC>\|Di * @version 1.0.0<CR><ESC>\|Di * @date <C-R>=strftime("%Y/%m/%d %H:%M:%S")<CR><CR><ESC>\|Di */<CR><ESC>\|D:w<CR>5k$a
+
+map ,u gg/\d\{4\}\/\(\d\{2\}[\/[:space:]\:]\)\{4\}\d\{2\}<CR>19xh<F6><C-o>
+map ,v Go<ESC>\|Do<ESC>\|a/*<CR><ESC>\|Di * Local variables:<CR><ESC>\|Di * tab-width: 4<CR><ESC>\|Di * c-basic-offset: 4<CR><ESC>\|Di * End:<CR><ESC>\|Di * vim600: noet sw=4 ts=4 fdm=marker<CR><ESC>\|Di * vim<600: noet sw=4 ts=4<CR><ESC>\|Di */<CR><ESC><C-o>
+
+nmap <C-N> :tnext<cr>
+nmap <C-P> :tprev<cr>
+map ,m :emenu <C-Z>
+map! ,n <C-O>:emenu <C-Z>
+
+map ,, :A<CR>
+map ,- :AS<CR>
+map ,\| :AV<CR>
+
+" javabrowser
+" 说明 ctags 程序的路径
+let JavaBrowser_Ctags_Cmd = '/usr/bin/ctags'
+" 假如 vim 不是 gui 版的, 那么可以做如下设置, 它将不改变窗口
+let JavaBrowser_Inc_Winwidth = 0 
+let JavaBrowser_Use_Icon = 1
+nmap ,j :JavaBrowser<CR>
+imap ,j <ESC>,j
+
+nmap <C-N> :tnext<CR>
+nmap <C-P> :tprev<CR>
+
+" jcommenter
+"autocmd FileType java let b:jcommenter_class_author='cnangel (junliang.li@alibaba-inc.com)'
+"autocmd FileType java let b:jcommenter_file_author='cnangel (junliang.li@alibaba-inc.com)'
+"autocmd FileType java source ~/.vim/macros/jcommenter.vim
+"autocmd FileType java map 'c :call JCommentWriter()<CR> 
+
+" vim jde
+"autocmd FileType java :call VjdeJavaNewProject()
+"let g:vjde_completion_key='<c-space>'
+
+"function JavaSetting()
+"	iab <buffer> sysout System.out.println
+"	iab <buffer> main public static void main(String argv[]){<CR>}
+"	iab <buffer> sync synchronized
+"	iab <buffer> r return;<Esc>hi
+"	iab <buffer> w while(){<CR><CR>}<Esc>kk6li
+"	iab <buffer> s String
+"	iab <buffer> ifi if(){<CR><CR>}<Esc>kk3li
+"	iab <buffer> el else{<CR><CR>}<Esc>kk3li
+"	iab <buffer> ife if(){<CR><CR>} else{<CR><CR>}<Esc>5k3li
+"	iab <buffer> fori for(int i=0;i< ;i++){<CR><CR>}<Esc>kk15li
+"endfunction 
+"autocmd FileType java :call JavaSetting()
+
+" 取消之前的 autocmd 
+":autocmd!
+" 假如编辑的是 java 文件, 那么读入 java.vim 的宏定义(定义的内容下节说明) 
+"autocmd FileType java source ~/.vim/files/java.vim
+" 假如编辑的是 java 文件, 那么读入 jcommenter.vim 定义 
+"autocmd FileType java source ~/.vim/macros/jcommenter.vim
+" 在新建 java 文件时, 预先将 java.skel 的内容复制进来 
+"autocmd BufNewFile *.java 0r ~/.vim/files/skeletons/java.skel
+" 在读入 java.skel 内容后, 运行 gnp 这个宏命令 
+"autocmd BufNewFile *.java normal gnp
+
+" tmp map
+"map ,. gg/gettext<CR>wigetlanguage <ESC>:w<CR>/\(^#.*\)\@<!en_us<CR>gg
+"map ,m /\(^#.*\)\@<!en_us<CR>\|yyi#<ESC>pf=/gettext<CR>isprintf( <ESC>fudiwi%s<ESC>f)a, getl<C-x><C-p>() )<ESC>:w<CR>?\(^#.*\)\@<=en_us<CR>j\|
+"map ,n \|yyi#<ESC>p\|/gettext<CR>isprintf( <ESC>fudiwi%s<ESC>f)a, getl<C-x><C-p>() )<ESC>:w<CR>?\(^#.*\)\@<=en_us<CR>j\|
+"map ,b /gettext<CR>isprintf( <ESC>fudiwi%s<ESC>f)a, getl<C-x><C-p>() )<ESC>:w<CR>?\(^#.*\)\@<=en_us<CR>j\|
